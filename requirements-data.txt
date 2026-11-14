@@ -1,0 +1,4 @@
+# extra packages used only by scripts/update_data.py and the tests (not by the app)
+-r requirements.txt
+openpyxl
+pytest

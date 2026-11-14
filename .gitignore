@@ -21,3 +21,4 @@ test.*
 # keep project assets and deploy requirements
 !requirements.txt
 !images/*.gif
+!requirements-data.txt
