@@ -3,5 +3,3 @@ pandas
 requests
 yfinance
 beautifulsoup4
-lxml
-pillow

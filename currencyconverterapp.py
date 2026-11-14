@@ -1,15 +1,15 @@
 import pandas as pd
 import requests
 import streamlit as st
-from PIL import Image
 
 st.set_page_config(page_title="Currency Converter", layout="wide")
 
 API_URL = "https://api.frankfurter.dev/v1/latest"
 CURRENCIES = ["JPY", "IDR", "MYR", "USD", "SGD", "KRW", "CNY"]
 
-st.image(Image.open("images/img2.png"), width=300)
-st.title("Currency Converter App")
+logo, head = st.columns([1, 6], vertical_alignment="center")
+logo.image("images/art-currency.gif", width=96)  # pixel art made with Pixelbolt
+head.title("Currency Converter App")
 st.markdown("This app converts the value of foreign currencies.")
 
 # Sidebar
@@ -49,7 +49,7 @@ else:
 with st.expander("About"):
     st.markdown(
         """
-- **Python libraries:** streamlit, pandas, requests, pillow
+- **Python libraries:** streamlit, pandas, requests
 - **Data source:** [frankfurter.dev](https://frankfurter.dev) (European Central Bank rates, updated on working days)
 """
     )

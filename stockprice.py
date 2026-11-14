@@ -21,6 +21,7 @@ ticker = st.sidebar.selectbox("Select ticker", list(TICKERS), format_func=TICKER
 start_date = st.sidebar.date_input("Start date", value=pd.Timestamp("1990-01-01"))
 end_date = st.sidebar.date_input("End date")
 
+st.image("images/banner.gif", width=420)  # pixel art made with Pixelbolt
 st.title("Simple Stock Price App")
 st.write(f"Shown are the **closing price** and **volume** of {ticker}!")
 

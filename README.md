@@ -10,7 +10,7 @@ Three small data apps built with [Streamlit](https://streamlit.io).
 | --- | --- | --- | --- | --- |
 | <img src="images/art-currency.gif" width="48"> | Currency Converter | `currencyconverterapp.py` | Converts between JPY, IDR, MYR, USD, SGD, KRW and CNY using live rates ([frankfurter.dev](https://frankfurter.dev), no API key) | streamlit, pandas, requests |
 | <img src="images/banner.gif" width="96"> | Simple Stock Price | `stockprice.py` | Closing price and volume charts for a few tickers, with CSV download ([yfinance](https://github.com/ranaroussi/yfinance)) | streamlit, pandas, yfinance |
-| <img src="images/art-syllabus.gif" width="48"> | KIT Course Syllabus | `syllabusapp.py` | Lists courses per program from [syllabus.kit.ac.jp](https://www.syllabus.kit.ac.jp/?c=menu&sk=00), filterable by year and semester | streamlit, pandas, requests, beautifulsoup4, lxml |
+| <img src="images/art-syllabus.gif" width="48"> | KIT Course Syllabus | `syllabusapp.py` | Reads every level, faculty, field and program live from [syllabus.kit.ac.jp](https://www.syllabus.kit.ac.jp/?c=menu&sk=00); filter by year, semester, day, period and title. Cached, with the last-fetched time shown | streamlit, pandas, requests, beautifulsoup4 |
 
 | Currency Converter | Stock Price | KIT Syllabus |
 | --- | --- | --- |
