@@ -8,13 +8,21 @@ Three small data apps built with [Streamlit](https://streamlit.io).
 
 | | App | File | What it does | Libraries |
 | --- | --- | --- | --- | --- |
-| <img src="images/art-currency.gif" width="48"> | Currency Converter | `currencyconverterapp.py` | Converts between JPY, IDR, MYR, USD, SGD, KRW and CNY using live rates ([frankfurter.dev](https://frankfurter.dev), no API key) | streamlit, pandas, requests |
+| <img src="images/art-currency.gif" width="48"> | Currency Converter | `currencyconverterapp.py` | 12 currencies with live ECB rates ([frankfurter.dev](https://frankfurter.dev), no API key): quick amounts, swap, fee estimator, 1-day/7-day/30-day change, 30-day high/low/average, 1-year range, trend chart, a "good rate" signal and a multi-currency table | streamlit, pandas, requests, plotly |
 | <img src="images/banner.gif" width="96"> | Stock Analysis | `stockprice.py` | NASDAQ, Bursa Malaysia and Japan (Tokyo): candlestick charts, SMA/EMA, Bollinger, RSI, MACD, Stochastic, a rule-based buy/neutral/sell signal, comparison with earlier weeks, months and years, and Shariah status for Bursa stocks | streamlit, pandas, yfinance, plotly, pypdf |
 | <img src="images/art-syllabus.gif" width="48"> | KIT Course Syllabus | `syllabusapp.py` | Reads every level, faculty, field and program live from [syllabus.kit.ac.jp](https://www.syllabus.kit.ac.jp/?c=menu&sk=00); filter by year, semester, day, period and title. Cached, with the last-fetched time shown | streamlit, pandas, requests, beautifulsoup4 |
 
 | Currency Converter | Stock Price | KIT Syllabus |
 | --- | --- | --- |
 | ![Currency Converter](images/intro.gif) | ![Stock Price](images/intro2.gif) | ![KIT Syllabus](images/intro3.gif) |
+
+## Currency Converter app
+
+- **Convert:** quick amount buttons, a swap button, inverse rate and a copyable result line. Numbers use sensible decimals (none for JPY, IDR and KRW).
+- **Fee estimator:** pick 0% interbank, 1% online transfer, 2% card, 3% money changer, 5% airport kiosk or a custom fee to see what you would really receive.
+- **Trend and signal:** 1-day, 7-day and 30-day change, 30-day high, low and average, the position in the 1-year range, and a chart. The signal compares today's rate with the 30-day average (educational, not financial advice).
+- **Multi-currency table:** the same amount in several other currencies at once, with 7-day and 30-day changes.
+- **Freshness:** shows the rate date, when it was fetched, and a note that rates stay static at weekends.
 
 ## Stock Analysis app
 
