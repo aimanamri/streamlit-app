@@ -1,68 +1,59 @@
+import pandas as pd
 import streamlit as st
 import yfinance as yf
-import pandas as pd
-import base64
 
-st.set_page_config(layout="wide")
+st.set_page_config(page_title="Simple Stock Price App", layout="wide")
 
-# Sidebar + Main Panel
-st.sidebar.header('Input Options')
+TICKERS = {
+    "AAPL": "Apple, AAPL",
+    "GOOGL": "Google, GOOGL",
+    "MSFT": "Microsoft, MSFT",
+    "SSNLF": "Samsung Electronics, SSNLF",
+    "TM": "Toyota Motor, TM",
+    "HMC": "Honda Motor Company, HMC",
+    "NTDOY": "Nintendo, NTDOY",
+    "ZM": "Zoom Video Communications, ZM",
+}
 
-# # Create the pandas DataFrame for stock tickername-code
-tickerCode = [['Apple, AAPL','AAPL'],
-['Google, GOOGL','GOOGL'],
-['Microsoft, MSFT','MSFT'],
-['Samsung Electronics, SSNLF','SSNLF'],
-['Toyota Motor, TM','TM'],
-['Honda Motor Company, HMC','HMC'],
-['Nintendo, NTDOY','NTDOY'],
-['Zoom Video Communications, ZM','ZM']]
+# Sidebar
+st.sidebar.header("Input Options")
+ticker = st.sidebar.selectbox("Select ticker", list(TICKERS), format_func=TICKERS.get)
+start_date = st.sidebar.date_input("Start date", value=pd.Timestamp("1990-01-01"))
+end_date = st.sidebar.date_input("End date")
 
-df = pd.DataFrame(tickerCode, columns=['tickerName', 'tickerCode'])
-values = df['tickerName'].tolist()
-options = df['tickerCode'].tolist()
-dic = dict(zip(options, values))
-# Sidebar - define the ticker symbol
-tickerSymbol = st.sidebar.selectbox('Select ticker', options, format_func=lambda x: dic[x])  
-startDate = st.sidebar.date_input('Start date',value=pd.Timestamp('1990-01-01'))
-endDate = st.sidebar.date_input('End date')
+st.title("Simple Stock Price App")
+st.write(f"Shown are the **closing price** and **volume** of {ticker}!")
 
-st.title('Simple Stock Price App')
-st.write(f'Shown are the **stock closing price ** and **volume** of {tickerSymbol} !')
 
-# get data on this ticker
-tickerData = yf.Ticker(tickerSymbol)
+@st.cache_data(ttl=3600)
+def load_history(symbol, start, end) -> pd.DataFrame:
+    return yf.Ticker(symbol).history(start=start, end=end)
 
-# get the historical prices for this ticker
-tickerDf = tickerData.history(period='1d',start=startDate,end=endDate)
-tickerDf   # Open  High   Low  Close  Volume  Dividends   Stock Splits
 
-st.write('## Closing Price')
-st.line_chart(tickerDf.Close)
-st.write('## Volume Price')
-st.line_chart(tickerDf.Volume)
+if start_date >= end_date:
+    st.error("Start date must be before end date.")
+    st.stop()
 
-def download_link(object_to_download, download_filename, download_link_text):
-    """
-    Generates a link to download the given object_to_download.
+try:
+    history = load_history(ticker, start_date, end_date)
+except Exception as err:  # yfinance raises various network/parse errors
+    st.error(f"Could not load data from Yahoo Finance. ({err})")
+    st.stop()
 
-    object_to_download (str, pd.DataFrame):  The object to be downloaded.
-    download_filename (str): filename and extension of file. e.g. mydata.csv, some_txt_output.txt
-    download_link_text (str): Text to display for download link.
+if history.empty:
+    st.warning("No data found for this ticker and date range.")
+    st.stop()
 
-    Examples:
-    download_link(YOUR_DF, 'YOUR_DF.csv', 'Click here to download data!')
-    download_link(YOUR_STRING, 'YOUR_STRING.txt', 'Click here to download your text!')
+st.dataframe(history)
 
-    """
-    if isinstance(object_to_download,pd.DataFrame):
-        object_to_download = object_to_download.to_csv(index=True)
+st.subheader("Closing Price")
+st.line_chart(history["Close"])
+st.subheader("Volume")
+st.line_chart(history["Volume"])
 
-    # some strings <-> bytes conversions necessary here
-    b64 = base64.b64encode(object_to_download.encode()).decode()
-
-    return f'<a href="data:file/txt;base64,{b64}" download="{download_filename}">{download_link_text}</a>'
-
-if st.button('Download Dataframe as CSV'):
-    tmp_download_link = download_link(tickerDf, 'output.csv', 'Click here to download your data!')
-    st.markdown(tmp_download_link, unsafe_allow_html=True)
+st.download_button(
+    "Download data as CSV",
+    data=history.to_csv().encode("utf-8"),
+    file_name=f"{ticker}.csv",
+    mime="text/csv",
+)

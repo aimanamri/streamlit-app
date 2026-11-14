@@ -1,0 +1,7 @@
+streamlit>=1.40
+pandas
+requests
+yfinance
+beautifulsoup4
+lxml
+pillow

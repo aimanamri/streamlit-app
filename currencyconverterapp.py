@@ -1,53 +1,55 @@
-import streamlit as st
-from PIL import Image
 import pandas as pd
 import requests
+import streamlit as st
+from PIL import Image
 
-st.set_page_config(layout="wide")
-image = Image.open('images/img2.png')
-st.image(image,width=300)
+st.set_page_config(page_title="Currency Converter", layout="wide")
 
-st.title('Currency Converter App')
-st.markdown('''
-This app converts the value of foreign currencies.
-''')
-st.beta_container()
-# Sidebar + Main Panel
-st.sidebar.header('Input Options')
+API_URL = "https://api.frankfurter.dev/v1/latest"
+CURRENCIES = ["JPY", "IDR", "MYR", "USD", "SGD", "KRW", "CNY"]
 
-# Sidebar - Currency price unit
-currencyList = ['JPY','IDR','MYR','USD','SGD','KRW','CNY']
-amount = st.sidebar.number_input('Enter some amount')
-rates =1.2
+st.image(Image.open("images/img2.png"), width=300)
+st.title("Currency Converter App")
+st.markdown("This app converts the value of foreign currencies.")
 
-base_price_unit = st.sidebar.selectbox('Select base currency',currencyList)
-symbols_price_unit =st.sidebar.selectbox('Select target currency to convert to',currencyList)
+# Sidebar
+st.sidebar.header("Input Options")
+amount = st.sidebar.number_input("Enter an amount", min_value=0.0, value=1.0, step=1.0)
+base = st.sidebar.selectbox("Select base currency", CURRENCIES, index=CURRENCIES.index("USD"))
+target = st.sidebar.selectbox("Select target currency", CURRENCIES, index=CURRENCIES.index("MYR"))
 
-# Retrieving currency data from ratesapi.io
-@st.cache
-def load_data(): # Not finish yet, trying to get the API token key from the wwebsite
-    url = ''.join(['https://api.ratesapi.io/api/latest?base=',base_price_unit,'&symbols=',symbols_price_unit])
-    response = requests.get(url)
-    data = response.json()
-    base_currency = pd.Series(data['base'],name='base_currency')
-    rates_df = pd.DataFrame.from_dict(data['rates'].items())
-    rates_df.columns = ['converted_currency','price']
-    conversion_date = pd.Series(data['date'],name='date')
-    df = pd.concat([base_currency,rates_df,conversion_date],axis=1)
-    pass
 
-df = load_data
-st.header('Currency conversion')
-st.write(df)
-st.write(f'{base_price_unit} {amount}     ⇒     {symbols_price_unit} {round(amount*rates,2)}')
+@st.cache_data(ttl=3600)
+def load_rate(base: str, target: str) -> dict:
+    """Fetch the latest rate from frankfurter.dev (free, no API key)."""
+    response = requests.get(API_URL, params={"base": base, "symbols": target}, timeout=10)
+    response.raise_for_status()
+    return response.json()
 
-st.subheader('Idea ↓')
-image = Image.open('images/img.jpg')
-st.image(image,width=900)
 
-# About
-footer = st.beta_expander('About')
-footer.markdown('''
-- **Python libraries: ** streamlit, pandas
-- **Data source: ** [ratesapi.io](https://www.ratesapi.io)
-''')
+st.header("Currency conversion")
+
+if base == target:
+    st.info("Base and target currency are the same. Pick two different currencies.")
+else:
+    try:
+        data = load_rate(base, target)
+        rate = data["rates"][target]
+        st.dataframe(
+            pd.DataFrame(
+                [{"base_currency": data["base"], "converted_currency": target,
+                  "price": rate, "date": data["date"]}]
+            ),
+            hide_index=True,
+        )
+        st.success(f"{base} {amount:,.2f}  ⇒  {target} {amount * rate:,.2f}")
+    except (requests.RequestException, KeyError, ValueError) as err:
+        st.error(f"Could not load exchange rates. Please try again later. ({err})")
+
+with st.expander("About"):
+    st.markdown(
+        """
+- **Python libraries:** streamlit, pandas, requests, pillow
+- **Data source:** [frankfurter.dev](https://frankfurter.dev) (European Central Bank rates, updated on working days)
+"""
+    )

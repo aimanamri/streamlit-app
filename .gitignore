@@ -18,3 +18,6 @@ ml
 __pycache__
 .vscode
 test.*
+# keep project assets and deploy requirements
+!requirements.txt
+!images/*.gif

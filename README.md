@@ -1,60 +1,68 @@
-# Python Streamlit Apps Simple Projects
-
 <p align="center">
-  <a href="https://github.com/aimanamri/streamlit-app">
-    <img alt="GitHub Language Count" src="https://img.shields.io/github/languages/count/aimanamri/streamlit-app">
-  </a>
-
-  <a href="https://github.com/aimanamri/streamlit-app">
-    <img alt="GitHub Top Language" src="https://img.shields.io/github/languages/top/aimanamri/streamlit-app">
-  </a>
-  
-  <a href="https://github.com/aimanamri/streamlit-app/stargazers">
-    <img alt="GitHub Stars" src="https://img.shields.io/github/stars/aimanamri/streamlit-app?style=social">
-  </a>
-
-  <a href="https://github.com/aimanamri/streamlit-app/commits/main">
-    <img alt="GitHub Last Commit" src="https://img.shields.io/github/last-commit/aimanamri/streamlit-app">
-  </a>
-
-  <a href="https://github.com/aimanamri/streamlit-app">
-    <img alt="Repository Size" src="https://img.shields.io/github/repo-size/aimanamri/streamlit-app">
-  </a>
+  <img src="images/banner.gif" alt="Pixel-art stock chart animation" width="480">
 </p>
 
-## 1. Currency Converter App  (In-progress) 
-- **Python libraries :** streamlit, pandas 
-- Run this demo locally
-```bash
-pip install --upgrade streamlit
-streamlit run https://raw.githubusercontent.com/aimanamri/streamlit-app/main/currencyconverterapp.py
-```
-![intro](https://github.com/aimanamri/streamlit-app/blob/main/images/intro.gif)
-<br>
-## 2. Simple Stock Price App (Completed)
-- Currently app is running on herokuapp : https://stock-pricez.herokuapp.com/
-- **Python libraries :** streamlit, pandas, yfinance, base64 
-- Run this demo locally
-```bash
-pip install --upgrade streamlit
-streamlit run https://raw.githubusercontent.com/aimanamri/streamlit-app/main/stockprice.py
-```
-- Might add some simple technical indicators (SMA,MA,MACD) and more stock ticker options in the future.
-![intro2](https://github.com/aimanamri/streamlit-app/blob/main/images/intro2.gif)
-## 3. KIT Course Syllabus App  (In-progress) 
-- **Python libraries :** streamlit, pandas
-- Run this demo locally
-```bash
-pip install --upgrade streamlit
-streamlit run https://raw.githubusercontent.com/aimanamri/streamlit-app/main/syllabusapp.py
-```
-![intro3](https://github.com/aimanamri/streamlit-app/blob/main/images/intro3.gif)
+# Streamlit Apps
 
-## Deploy on Heroku
-|         Heroku App Guide    | Links                                                                |
-| ----------------- | ------------------------------------------------------------------ |
-| Deploying your Streamlit dashboard with Heroku | https://gilberttanner.com/blog/deploying-your-streamlit-dashboard-with-heroku |
-| Keeping your Heroku App awake | https://kaffeine.herokuapp.com/ |
-| Download Heroku CLI | https://devcenter.heroku.com/articles/heroku-cli |
-| Download Git | https://git-scm.com/downloads |
-| Simple YouTube Tutorial |https://youtu.be/nJHrSvYxzjE |
+Three small data apps built with [Streamlit](https://streamlit.io).
+
+| | App | File | What it does | Libraries |
+| --- | --- | --- | --- | --- |
+| <img src="images/art-currency.gif" width="48"> | Currency Converter | `currencyconverterapp.py` | Converts between JPY, IDR, MYR, USD, SGD, KRW and CNY using live rates ([frankfurter.dev](https://frankfurter.dev), no API key) | streamlit, pandas, requests |
+| <img src="images/banner.gif" width="96"> | Simple Stock Price | `stockprice.py` | Closing price and volume charts for a few tickers, with CSV download ([yfinance](https://github.com/ranaroussi/yfinance)) | streamlit, pandas, yfinance |
+| <img src="images/art-syllabus.gif" width="48"> | KIT Course Syllabus | `syllabusapp.py` | Lists courses per program from [syllabus.kit.ac.jp](https://www.syllabus.kit.ac.jp/?c=menu&sk=00), filterable by year and semester | streamlit, pandas, requests, beautifulsoup4, lxml |
+
+| Currency Converter | Stock Price | KIT Syllabus |
+| --- | --- | --- |
+| ![Currency Converter](images/intro.gif) | ![Stock Price](images/intro2.gif) | ![KIT Syllabus](images/intro3.gif) |
+
+## Run locally
+
+Requires Python 3.9+.
+
+```bash
+git clone https://github.com/aimanamri/streamlit-app.git
+cd streamlit-app
+python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+Then start any one app:
+
+```bash
+streamlit run currencyconverterapp.py
+streamlit run stockprice.py
+streamlit run syllabusapp.py
+```
+
+It opens at http://localhost:8501.
+
+## Deploy (Streamlit Community Cloud, free)
+
+Each app is deployed separately from the same repo.
+
+1. Push this repo to GitHub (it must contain `requirements.txt`, which it already does).
+2. Go to [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub.
+3. Click **Create app** and choose **Deploy a public app from GitHub**.
+4. Fill in:
+   - **Repository:** `aimanamri/streamlit-app`
+   - **Branch:** `main`
+   - **Main file path:** `currencyconverterapp.py` (or `stockprice.py`, `syllabusapp.py`)
+5. Click **Deploy**. The first build takes a few minutes. You get a URL like `https://<your-app>.streamlit.app`.
+
+Repeat steps 3-5 for each of the other apps.
+
+Notes:
+- Redeploys are automatic on every push to `main`.
+- Free apps go to sleep after inactivity; visitors just click "wake up".
+- Other options: [Hugging Face Spaces](https://huggingface.co/docs/hub/spaces-sdks-streamlit) (choose the Streamlit SDK) or any host that can run `streamlit run <file> --server.port $PORT --server.address 0.0.0.0` (Render, Railway, Fly.io).
+- No secrets or API keys are needed.
+
+## Credits
+
+Pixel-art animations made with [Pixelbolt](https://github.com/skulitom/Pixelbolt).
+
+## License
+
+[MIT](LICENSE)
